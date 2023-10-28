@@ -19,27 +19,27 @@ async def get_response(
             "previous_history": [
                 {
                     "role": "user",
-                    "message": previous_user_message[2] if previous_user_message[2] is not None else ''
+                    "message": previous_user_message[2] or ''
                 },
                 {
                     "role": "assistant",
-                    "message": previous_assistant_message[2] if previous_assistant_message[2] is not None else ''
+                    "message": previous_assistant_message[2] or ''
                 },
                 {
                     "role": "user",
-                    "message": previous_user_message[1] if previous_user_message[1] is not None else ''
+                    "message": previous_user_message[1] or ''
                 },
                 {
                     "role": "assistant",
-                    "message": previous_assistant_message[1] if previous_assistant_message[1] is not None else ''
+                    "message": previous_assistant_message[1] or ''
                 },
                 {
                     "role": "user",
-                    "message": previous_user_message[0] if previous_user_message[0] is not None else ''
+                    "message": previous_user_message[0] or ''
                 },
                 {
                     "role": "assistant",
-                    "message": previous_assistant_message[0] if previous_assistant_message[0] is not None else ''
+                    "message": previous_assistant_message[0] or ''
                 }
             ]
         }
