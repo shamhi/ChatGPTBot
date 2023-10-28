@@ -67,7 +67,8 @@ async def gpt_answer(message: Message, state: FSMContext):
                                                 parse_mode='html')
 
             try:
-                await message.bot.edit_message_text(chat_id=message.chat.id, message_id=msg.message_id, text=fn.reformat_answer(text=response),
+                await message.bot.edit_message_text(chat_id=message.chat.id, message_id=msg.message_id,
+                                                    text=html.quote(fn.reformat_answer(text=response)),
                                                     parse_mode='html')
             except:
                 await message.bot.edit_message_text(chat_id=message.chat.id, message_id=msg.message_id, text=response,
