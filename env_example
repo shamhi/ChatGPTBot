@@ -1,0 +1,11 @@
+TOKEN = '1234567890:QvOHGTsPVGysP8DSsPGyWLGysP'
+PAYMENTS_TOKEN = 'Your payments token (optional)'
+EDEN_API = 'eyJci5MzBmZiOiJIUzsIpXVCJ9.eyJ1c2VyX2lkiJhbjcjAtMTgwYi00ODUzsIUtMTk4YjkyMjc3ZGDlwidHlUzsUzsImFwaV90b2tlbiJ9.z291guImFwadBTcGJTWjVcvB_a_q9258gzGrtr8'
+
+IDS = '47215323,12837422341,532134831,3831352714'
+
+PG_HOST = "ip or localhost"
+PG_PORT = "5432"
+PG_USER = "postgres"
+PG_PASSWORD = "passwd"
+PG_DATABASE = "dbname"
