@@ -1,4 +1,4 @@
-from aiogram import html
+from aiogram import md
 from app.config import EDEN_API
 import aiohttp
 
@@ -62,19 +62,5 @@ async def get_response(
 
 
 def reformat_answer(text: str) -> str:
-    text = html.quote(text)
-    pre_code_count = text.count('```')
-    for syms in range(pre_code_count):
-        if syms % 2 == 0:
-            text = text.replace('```', '<code>', 1)
-        else:
-            text = text.replace('```', '</code>\n', 1)
-
-    inline_code_count = text.count('`')
-    for sym in range(inline_code_count):
-        if sym % 2 == 0:
-            text = text.replace('`', '<code>', 1)
-        else:
-            text = text.replace('`', '</code>', 1)
-
+    text = md.quote(text).replace(r'\`', '`')
     return text
