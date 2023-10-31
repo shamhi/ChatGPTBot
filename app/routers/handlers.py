@@ -19,35 +19,20 @@ async def cmd_start(message: Message):
 
 
 @main_router.message(F.text)
-async def gpt_answer(message: Message, state: FSMContext):
+async def gpt_answer(message: Message):
     from random import randint
     from asyncio import sleep
 
     msg = await message.answer("<b>Обработка</b> <code>0%..</code>", parse_mode='html')
 
-    rand_pc = randint(3, 25)
+    rand_pc = randint(3, 35)
 
     await sleep(.5)
     await message.bot.edit_message_text(chat_id=message.chat.id, message_id=msg.message_id,
                                         text=f"<b>Обработка</b> <code>{rand_pc}%..</code>",
                                         parse_mode='html')
 
-    state_data = await state.get_data()
-    user_msg_1 = state_data.get('previous_user_msg_1')
-    assistant_msg_1 = state_data.get('previous_assistant_msg_1')
-
-    user_msg_2 = state_data.get('previous_user_msg_2')
-    assistant_msg_2 = state_data.get('previous_assistant_msg_2')
-
-    user_msg_3 = state_data.get('previous_user_msg_3')
-    assistant_msg_3 = state_data.get('previous_assistant_msg_3')
-
-    response = await fn.get_response(current_message=message.text,
-                                     previous_user_message=[user_msg_1, user_msg_2, user_msg_3],
-                                     previous_assistant_message=[assistant_msg_1, assistant_msg_2, assistant_msg_3])
-
-    await state.update_data(previous_user_msg_2=user_msg_1, previous_assistant_msg_2=assistant_msg_1)
-    await state.update_data(previous_user_msg_3=user_msg_2, previous_assistant_msg_3=assistant_msg_2)
+    response = await fn.get_response(current_message=message.text, history=None)
 
     percent, dots = rand_pc, 1
     while True:
@@ -73,8 +58,6 @@ async def gpt_answer(message: Message, state: FSMContext):
             except:
                 await message.bot.edit_message_text(chat_id=message.chat.id, message_id=msg.message_id, text=response,
                                                     parse_mode=None)
-
-            await state.update_data(previous_user_msg_1=message.text, previous_assistant_msg_1=response)
 
             return
         else:

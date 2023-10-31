@@ -5,8 +5,7 @@ import aiohttp
 
 async def get_response(
         current_message: str,
-        previous_user_message: list[str],
-        previous_assistant_message: list[str]
+        history: list[dict[str, str]]
 ) -> str:
     try:
         url = "https://api.edenai.run/v2/text/chat"
@@ -17,32 +16,7 @@ async def get_response(
             "providers": "openai",
             "openai": "gpt-3.5-turbo",
             "text": current_message,
-            "previous_history": [
-                {
-                    "role": "user",
-                    "message": previous_user_message[2] or ''
-                },
-                {
-                    "role": "assistant",
-                    "message": previous_assistant_message[2] or ''
-                },
-                {
-                    "role": "user",
-                    "message": previous_user_message[1] or ''
-                },
-                {
-                    "role": "assistant",
-                    "message": previous_assistant_message[1] or ''
-                },
-                {
-                    "role": "user",
-                    "message": previous_user_message[0] or ''
-                },
-                {
-                    "role": "assistant",
-                    "message": previous_assistant_message[0] or ''
-                }
-            ]
+            "previous_history": history or ''
         }
 
         headers = {
