@@ -1,8 +1,9 @@
 from ..basestorage.storage import MultipleQueryResults, RawConnection, SingleQueryResult
 from typing import Any, Optional, TypeVar
 from datetime import datetime
-import asyncpg
 import structlog
+import asyncpg
+import json
 import time
 
 
@@ -131,24 +132,36 @@ class PostgresConnection(RawConnection):
                         id SERIAL PRIMARY KEY,
                         user_id BIGINT,
                         user_name VARCHAR(32),
-                        registered_at BIGINT)"""
+                        history JSONB,
+                        registered_at TIMESTAMP)"""
 
         await self._execute(sql)
-
-    async def create_msg_table(self) -> None:
-        pass
 
     async def register_user(self, user_id: int, name: str) -> None:
         check_user = await self._fetchrow(sql='SELECT * FROM users WHERE user_id = $1', params=(user_id,))
 
         if not check_user.data:
-            sql = "INSERT INTO users (user_id, user_name, registered_at) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING"
+            sql = "INSERT INTO users (user_id, user_name, history, registered_at) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING"
             params = (
                 user_id,
                 name,
-                round(datetime.timestamp(datetime.now())),
+                json.dumps([]),
+                datetime.now(),
             )
             await self._execute(sql, params)
+
+    async def add_message_to_history(self, history_dict: dict[str, str], user_id: int):
+        current_history = await self._execute(f"SELECT history FROM users WHERE user_id = {user_id}")
+
+        history_list = json.loads(current_history) if current_history else []
+        history_list.append(history_dict)
+
+        updated_history = json.dumps(history_list)
+
+        sql = "UPDATE users SET history = $1 WHERE user_id = $2"
+        params = (updated_history, user_id)
+
+        await self._execute(sql, params)
 
     async def get_users_columns(self):
         sql = "SELECT * FROM users"

@@ -16,7 +16,7 @@ async def get_response(
             "providers": "openai",
             "openai": "gpt-3.5-turbo",
             "text": current_message,
-            "previous_history": history or ''
+            "previous_history": history
         }
 
         headers = {

@@ -3,8 +3,14 @@ from aiogram.types import Message
 from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
 from app.routers import functions as fn
+from app.db.postgres.storage import PostgresConnection
+import structlog
+import asyncpg
 
 main_router = Router()
+
+
+# TODO: Use DB for gpt context
 
 
 @main_router.message(CommandStart())
@@ -19,20 +25,34 @@ async def cmd_start(message: Message):
 
 
 @main_router.message(F.text)
-async def gpt_answer(message: Message):
+async def gpt_answer(message: Message, state: FSMContext):
     from random import randint
     from asyncio import sleep
 
+
     msg = await message.answer("<b>Обработка</b> <code>0%..</code>", parse_mode='html')
-
     rand_pc = randint(3, 35)
-
     await sleep(.5)
     await message.bot.edit_message_text(chat_id=message.chat.id, message_id=msg.message_id,
                                         text=f"<b>Обработка</b> <code>{rand_pc}%..</code>",
                                         parse_mode='html')
 
-    response = await fn.get_response(current_message=message.text, history=None)
+    state_data = await state.get_data()
+
+    history = state_data.get('history')
+    history = [] if history is None else history
+
+    await message.bot.send_chat_action(chat_id=message.chat.id, action='typing')
+    response = await fn.get_response(current_message=message.text, history=history)
+
+    if len(history) >= 20:
+        history.pop(0)
+        history.pop(0)
+
+    history.append({'role': 'user', 'message': message.text})
+    history.append({'role': 'assistant', 'message': response})
+
+    await state.update_data(history=history)
 
     percent, dots = rand_pc, 1
     while True:
