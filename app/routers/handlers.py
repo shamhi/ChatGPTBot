@@ -31,7 +31,7 @@ async def gpt_answer(message: Message, state: FSMContext):
 
 
     msg = await message.answer("<b>Обработка</b> <code>0%..</code>", parse_mode='html')
-    rand_pc = randint(3, 35)
+    rand_pc = randint(10, 35)
     await sleep(.5)
     await message.bot.edit_message_text(chat_id=message.chat.id, message_id=msg.message_id,
                                         text=f"<b>Обработка</b> <code>{rand_pc}%..</code>",
@@ -43,7 +43,16 @@ async def gpt_answer(message: Message, state: FSMContext):
     history = [] if history is None else history
 
     await message.bot.send_chat_action(chat_id=message.chat.id, action='typing')
-    response = await fn.get_response(current_message=message.text, history=history)
+    response = await fn.get_response(
+        current_message=message.text,
+        history=history,
+        bot=message.bot,
+        chat_id=message.chat.id,
+        message_id=msg.message_id
+    )
+
+    if not response:
+        return
 
     if len(history) >= 20:
         history.pop(0)

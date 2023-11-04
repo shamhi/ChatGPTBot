@@ -90,7 +90,7 @@ def setup_filters(dp: Dispatcher):
 
 def setup_middlewares(dp: Dispatcher):
     dp.update.outer_middleware(InfoLoggerMiddleware(logger=dp['aiogram_logger']))
-    dp.message.middleware(ThrottlingMiddleware(logger=dp['throttling_logger'], throttling_time=10))
+    dp.message.middleware(ThrottlingMiddleware(logger=dp['throttling_logger'], throttling_time=8))
 
 
 def main():

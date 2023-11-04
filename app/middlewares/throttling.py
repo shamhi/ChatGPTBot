@@ -36,13 +36,15 @@ class ThrottlingMiddleware(BaseMiddleware):
 
         throttling_data = self.cache[user.id]
 
-        if throttling_data.rate == 5:
+        if throttling_data.rate == 3:
             self.cache[user.id] = throttling_data
 
             if not throttling_data.send_warning:
                 await event.answer('Вы заблокированы за спам. Повторите через некоторое время')
 
                 throttling_data.send_warning = True
+
+            logger.debug('Throttling Check')
 
             return
 
