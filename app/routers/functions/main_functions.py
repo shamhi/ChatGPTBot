@@ -37,14 +37,14 @@ async def get_response(
         answer = response_data.get('openai', {}).get('generated_text')
 
     if answer is None:
-        await delete_none_answer(bot=bot, chat_id=chat_id, message_id=message_id)
+        await edit_none_answer(bot=bot, chat_id=chat_id, message_id=message_id)
         return
 
     return answer
 
 
-async def delete_none_answer(bot: Bot, chat_id: int, message_id: int) -> None:
-    await bot.delete_message(chat_id=chat_id, message_id=message_id)
+async def edit_none_answer(bot: Bot, chat_id: int, message_id: int) -> None:
+    await bot.edit_message_text(chat_id=chat_id, message_id=message_id, text='*Ошибочка`...`*', parse_mode='markdownv2')
 
 
 def reformat_answer(text: str) -> str:
