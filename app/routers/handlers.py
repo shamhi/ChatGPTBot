@@ -1,5 +1,5 @@
 from aiogram import Router, html, F
-from aiogram.types import Message
+from aiogram.types import Message, InlineQuery, InlineQueryResultArticle, InputTextMessageContent, InlineQueryResultPhoto, InlineQueryResultsButton
 from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
 from app.routers import functions as fn
@@ -11,6 +11,26 @@ main_router = Router()
 
 
 # TODO: Use DB for gpt context
+
+
+@main_router.inline_query(F.query)
+async def test_inline(query: InlineQuery):
+    text = query.query
+
+    response = await fn.inline_get_response(text=text)
+
+    results = [
+        InlineQueryResultArticle(
+            id='0',
+            title=f"Запрос: {text}",
+            description=f"Ответ: {response}",
+            input_message_content=InputTextMessageContent(
+                message_text=fn.reformat_answer(response),
+                parse_mode='markdownv2'
+            )
+        )
+    ]
+    await query.answer(results=results, is_personal=True)
 
 
 @main_router.message(CommandStart())
