@@ -46,12 +46,8 @@ async def cmd_start(message: Message):
 
 @main_router.message(Command('newchat'))
 async def cmd_newchat(message: Message, state: FSMContext):
-    sd = await state.get_data()
-    print(sd.get('history'))
     await state.update_data(history=[])
     await message.answer('Ваша история с ботом очищена, начат новый диалог')
-    sd = await state.get_data()
-    print(sd.get('history'))
 
 
 @main_router.message(F.text)
