@@ -41,6 +41,7 @@ async def close_db_connections(dp: Dispatcher):
 async def setup_commands(bot: Bot):
     commands = [
         BotCommand(command='start', description='Запуск'),
+        BotCommand(command='newchat', description='Новый диалог')
     ]
 
     await bot.set_my_commands(commands=commands)

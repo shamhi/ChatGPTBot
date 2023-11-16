@@ -56,24 +56,19 @@ async def get_response(
         "content-type": "application/json",
         "authorization": f"Bearer {EDEN_API}"
     }
-
-    async with aiohttp.ClientSession() as session:
-        response = await session.post(url, json=payload, headers=headers)
-        if response.status == 429:
-            retry_after = int(response.headers.get("Retry-After"))
-            await asyncio.sleep(retry_after)
-        response_data = await response.json()
-        answer = response_data.get('openai', {}).get('generated_text')
-
-    if answer is None:
-        await edit_none_answer(bot=bot, chat_id=chat_id, message_id=message_id)
-        return
-
-    return answer
+    try:
+        async with aiohttp.ClientSession() as session:
+            response = await session.post(url, json=payload, headers=headers)
+            if response.status == 429:
+                retry_after = int(response.headers.get("Retry-After"))
+                await asyncio.sleep(retry_after)
+            response_data = await response.json()
+            answer = response_data.get('openai').get('generated_text')
 
 
-async def edit_none_answer(bot: Bot, chat_id: int, message_id: int) -> None:
-    await bot.edit_message_text(chat_id=chat_id, message_id=message_id, text='*Ошибочка`...`*', parse_mode='markdownv2')
+        return answer
+    except Exception as er:
+        return f'Ошибка\n```\n{er}\n```'
 
 
 def reformat_answer(text: str) -> str:
