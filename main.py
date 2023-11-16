@@ -1,13 +1,14 @@
 from aiogram import Dispatcher, Bot
-from app.middlewares import InfoLoggerMiddleware, ThrottlingMiddleware
-from app.routers import main_router
-from app.filters import ChatTypeFilter, IsAdmin
 from aiogram.types import BotCommand
-from app import config
-from app import utils
 import structlog
 import tenacity
 import asyncpg
+
+from app.middlewares import InfoLoggerMiddleware, ThrottlingMiddleware
+from app.routers import main_router
+from app.filters import ChatTypeFilter, IsAdmin
+from app import config
+from app import utils
 
 
 
