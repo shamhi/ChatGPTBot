@@ -73,5 +73,5 @@ async def gpt_answer(message: Message, state: FSMContext):
     await state.update_data(history=history)
 
     await message.bot.edit_message_text(chat_id=message.chat.id, message_id=msg.message_id,
-                                        text=fn.reformat_answer(text=response),
+                                        text=fn.reformat_answer(text=str(response)),
                                         parse_mode='markdownv2')
