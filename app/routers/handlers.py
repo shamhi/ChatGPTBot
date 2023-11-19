@@ -60,10 +60,7 @@ async def gpt_answer(message: Message, state: FSMContext):
     await message.bot.send_chat_action(chat_id=message.chat.id, action='typing')
     response = await fn.get_response(
         current_message=message.text,
-        history=history,
-        bot=message.bot,
-        chat_id=message.chat.id,
-        message_id=msg.message_id
+        history=history
     )
 
     if len(history) >= 20:

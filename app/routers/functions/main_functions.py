@@ -35,10 +35,7 @@ async def inline_get_response(text: str):
 
 async def get_response(
         current_message: str,
-        history: list[dict[str, str]],
-        bot: Bot,
-        chat_id: int,
-        message_id: int
+        history: list[dict[str, str]]
 ) -> str:
     url = "https://api.edenai.run/v2/text/chat"
 
