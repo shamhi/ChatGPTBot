@@ -96,12 +96,13 @@ def setup_middlewares(dp: Dispatcher):
 
 
 def main():
-    bot = Bot(token=config.TOKEN)
+    bot1 = Bot(token=config.TOKEN1)
+    bot2 = Bot(token=config.TOKEN2)
     dp = Dispatcher()
 
     dp.startup.register(aiogram_on_startup)
     dp.shutdown.register(aiogram_on_shutdown)
-    dp.run_polling(bot)
+    dp.run_polling(bot1, bot2)
 
 
 if __name__ == '__main__':

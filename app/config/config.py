@@ -4,7 +4,8 @@ from os import getenv
 load_dotenv()
 
 # Tokens
-TOKEN: str = str(getenv('TOKEN'))
+TOKEN1: str = str(getenv('TOKEN1'))
+TOKEN2: str = str(getenv('TOKEN2'))
 PAYMENTS_TOKEN: str = str(getenv('PAYMENTS_TOKEN'))
 EDEN_API: str = str(getenv('EDEN_API'))
 

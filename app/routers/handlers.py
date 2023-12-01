@@ -14,19 +14,19 @@ main_router = Router()
 
 
 @main_router.inline_query(F.query)
-async def test_inline(query: InlineQuery):
-    text = query.query
+async def answer_query(query: InlineQuery):
+    ...
 
-    response = await fn.inline_get_response(text=text)
 
+@main_router.inline_query()
+async def none_inline(query: InlineQuery):
     results = [
         InlineQueryResultArticle(
             id='0',
-            title=f"Запрос: {text}",
-            description=f"Ответ: {response}",
+            title=f"Usage",
+            description=f"Usage: @gptshambot [question]",
             input_message_content=InputTextMessageContent(
-                message_text=fn.reformat_answer(response),
-                parse_mode='markdownv2'
+                message_text='Usage: @gptshambot [question]'
             )
         )
     ]
