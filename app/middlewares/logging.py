@@ -90,6 +90,15 @@ class InfoLoggerMiddleware(BaseMiddleware):
                 new_state=upd.new_chat_member,
             )
             logger.debug("Received chat member update")
+        elif event.inline_query:
+            query = event.inline_query
+            logger = logger.bind(
+                query_id=query.id,
+                chat_id=query.from_user.id,
+                chat_type=query.chat_type,
+                query=query.query,
+            )
+            logger.debug("Received inline query update")
         await handler(event, data)
         logger = logger.bind(
             process_result=True,
