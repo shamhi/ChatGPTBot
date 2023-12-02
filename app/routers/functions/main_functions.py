@@ -69,5 +69,8 @@ async def get_response(
 
 
 def reformat_answer(text: str) -> str:
-    text = md.quote(text).replace(r'\`', '`')
-    return text
+    try:
+        text = md.quote(text).replace(r'\`', '`')
+        return text
+    except Exception as er:
+        return f'Ошибка\n```\n{er}\n```'
