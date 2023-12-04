@@ -1,5 +1,5 @@
 from aiogram import Router, html, F
-from aiogram.types import Message, InlineQuery, InlineQueryResultArticle, InputTextMessageContent, InlineQueryResultPhoto, InlineQueryResultsButton
+from aiogram.types import Message, InlineQuery, InlineQueryResultArticle, InputTextMessageContent
 from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
 from app.routers import functions as fn
@@ -70,5 +70,5 @@ async def gpt_answer(message: Message, state: FSMContext):
     await state.update_data(history=history)
 
     await message.bot.edit_message_text(chat_id=message.chat.id, message_id=msg.message_id,
-                                        text=fn.reformat_answer(text=str(response)),
+                                        text=fn.reformat_answer(text=response),
                                         parse_mode='markdownv2')
