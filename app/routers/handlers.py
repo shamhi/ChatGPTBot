@@ -79,18 +79,6 @@ async def cmd_start(message: Message):
         'Отправь мне вопрос и я постараюсь на него ответить', parse_mode='html')
 
 
-@main_router.message(Command('get_chat'))
-async def cmd_get_chat(message: Message, command: CommandObject):
-    args = command.args
-    try:
-        chat = await message.bot.get_chat(args)
-        await message.answer(f'Chat ID: `{chat.id}`\n'
-                             f'User Name: `{chat.username}`\n'
-                             f'Title: `{chat.title}`')
-    except:
-        await message.answer(rf'`{args}` not found', parse_mode='markdownv2')
-
-
 @main_router.message(Command('newchat'))
 async def cmd_newchat(message: Message, state: FSMContext):
     await state.update_data(history=[])

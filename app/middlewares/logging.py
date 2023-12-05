@@ -27,7 +27,7 @@ class InfoLoggerMiddleware(BaseMiddleware):
                 chat_id=message.chat.id,
             )
             if message.from_user is not None:
-                logger = logger.bind(user_id=message.from_user.id)
+                logger = logger.bind(user_id=message.from_user.id, user_name=message.from_user.username)
             if message.text:
                 logger = logger.bind(text=message.text, entities=message.entities)
             if message.video:
