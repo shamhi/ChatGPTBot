@@ -86,7 +86,7 @@ async def cmd_get_chat(message: Message, command: CommandObject):
         chat = await message.bot.get_chat(args)
         await message.answer(f'Chat ID: `{chat.id}`\n'
                              f'User Name: `{chat.username}`\n'
-                             f'Title: `{chat.title}`', parse_mode='markdownv2')
+                             f'Title: `{chat.title}`')
     except:
         await message.answer(rf'`{args}` not found', parse_mode='markdownv2')
 
