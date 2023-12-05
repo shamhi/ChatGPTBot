@@ -1,6 +1,6 @@
 from aiogram import Router, html, F
 from aiogram.types import Message, CallbackQuery, InlineQuery, InlineQueryResultArticle, InputTextMessageContent
-from aiogram.filters import CommandStart, Command
+from aiogram.filters import CommandStart, Command, CommandObject
 from aiogram.fsm.context import FSMContext
 
 from app.models import ChatGPT
@@ -77,6 +77,18 @@ async def cmd_start(message: Message):
         f'<b>Добро пожаловать,</b> <a href="tg://user?id={message.from_user.id}">{html.quote(message.from_user.full_name)}</a>\n\n'
         '📃Я чат-бот, который может ответить на любой вопрос (ну почти)📚\n\n'
         'Отправь мне вопрос и я постараюсь на него ответить', parse_mode='html')
+
+
+@main_router.message(Command('get_chat'))
+async def cmd_get_chat(message: Message, command: CommandObject):
+    args = command.args
+    try:
+        chat = await message.bot.get_chat(args)
+        await message.answer(f'Chat ID: `{chat.id}`\n'
+                             f'User Name: `{chat.username}`\n'
+                             f'Title: `{chat.title}`', parse_mode='markdownv2')
+    except:
+        await message.answer(rf'`{args}` not found', parse_mode='markdownv2')
 
 
 @main_router.message(Command('newchat'))
