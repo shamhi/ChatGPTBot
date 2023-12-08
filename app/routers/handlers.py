@@ -87,7 +87,7 @@ async def cmd_newchat(message: Message, state: FSMContext):
 
 @main_router.message(F.text)
 async def send_gpt_response(message: Message, state: FSMContext):
-    msg = await message.answer("Ваш запрос обрабатывается...")
+    msg = await message.answer("Ваш запрос обрабатывается...\nЕсли произошла какая-то ошибка, введите /newchat")
 
     state_data = await state.get_data()
     history = state_data.get('history') or []
