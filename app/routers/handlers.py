@@ -109,7 +109,7 @@ async def send_gpt_response(message: Message, state: FSMContext):
         await message.delete()
         return await msg.delete()
 
-    generated_text = openai.get('generated_text')
+    generated_text = openai.get('generated_text', 'error')
     messages = openai.get('message')
     error = openai.get('error')
 
