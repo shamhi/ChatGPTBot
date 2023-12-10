@@ -98,26 +98,29 @@ async def send_gpt_response(message: Message, state: FSMContext):
     await message.bot.send_chat_action(chat_id=message.chat.id, action='typing')
 
     response: dict[dict] = await gpt.get_response()
-    openai: dict = response.get('openai')
-    detail = response.get('detail')
-
-    if detail:
+    if not response:
         await message.delete()
         return await msg.delete()
 
-    if openai:
-        generated_text = openai.get('generated_text')
-        messages = openai.get('message')
-        error = openai.get('error')
+    openai = response.get('openai')
+    detail = response.get('detail')
 
-        if error:
-            await message.delete()
-            return await msg.delete()
+    if detail or not openai:
+        await message.delete()
+        return await msg.delete()
 
-        if len(history) >= 20:
-            history = history[2:]
+    generated_text = openai.get('generated_text')
+    messages = openai.get('message')
+    error = openai.get('error')
 
-        history.extend(messages)
-        await state.update_data(history=history)
+    if error:
+        await message.delete()
+        return await msg.delete()
 
-        await msg.edit_text(text=gpt.reformat_response(generated_text), parse_mode='markdownv2', disable_web_page_preview=True)
+    if len(history) >= 20:
+        history = history[2:]
+
+    history.extend(messages)
+    await state.update_data(history=history)
+
+    await msg.edit_text(text=gpt.reformat_response(generated_text), parse_mode='markdownv2', disable_web_page_preview=True)
