@@ -96,12 +96,28 @@ async def send_gpt_response(message: Message, state: FSMContext):
     gpt = ChatGPT(current_message=message.text, user_history=history)
 
     await message.bot.send_chat_action(chat_id=message.chat.id, action='typing')
-    response = await gpt.get_response()
 
-    if len(history) >= 20:
-        history = history[2:]
+    response: dict[dict] = await gpt.get_response()
+    openai: dict = response.get('openai')
+    detail = response.get('detail')
 
-    history.extend([{'role': 'user', 'message': message.text}, {'role': 'assistant', 'message': response}])
-    await state.update_data(history=history)
+    if detail:
+        await message.delete()
+        return await msg.delete()
 
-    await msg.edit_text(text=gpt.reformat_response(response), parse_mode='markdownv2')
+    if openai:
+        generated_text = openai.get('generated_text')
+        messages = openai.get('message')
+        error = openai.get('error')
+
+        if error:
+            await message.delete()
+            return await msg.delete()
+
+        if len(history) >= 20:
+            history = history[2:]
+
+        history.extend(messages)
+        await state.update_data(history=history)
+
+        await msg.edit_text(text=gpt.reformat_response(generated_text), parse_mode='markdownv2', disable_web_page_preview=True)

@@ -45,7 +45,7 @@ class ChatGPT:
             return f'Ошибка\n```\n{er}\n```'
 
 
-    async def get_response(self) -> str:
+    async def get_response(self) -> dict:
         url = "https://api.edenai.run/v2/text/chat"
 
         payload = {
@@ -69,17 +69,15 @@ class ChatGPT:
                     retry_after = int(response.headers.get("Retry-After"))
                     await asyncio.sleep(retry_after)
                 response_data = await response.json()
-                answer = response_data.get('openai', {}).get('generated_text')
 
-
-            return answer
-        except Exception as er:
-            return f'Ошибка\n```\n{er}\n```'
+            return response_data
+        except:
+            ...
 
     @staticmethod
     def reformat_response(text) -> str:
-        try:
+        if text:
             text = md.quote(text).replace(r'\`', '`')
             return text
-        except Exception as er:
-            return f'Ошибка\n```\n{er}\n```'
+
+        return f"{text} isn't string"
