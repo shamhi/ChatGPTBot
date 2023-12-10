@@ -80,4 +80,4 @@ class ChatGPT:
             text = md.quote(text).replace(r'\`', '`')
             return text
 
-        return f"{text} isn't string"
+        return f"{text} isn\'t string"
