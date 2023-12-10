@@ -1,10 +1,11 @@
 from aiogram import Router, html, F
 from aiogram.types import Message, CallbackQuery, InlineQuery, InlineQueryResultArticle, InputTextMessageContent
-from aiogram.filters import CommandStart, Command, CommandObject
+from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
 
 from app.models import ChatGPT
 from app.keyboards import ikb
+
 
 main_router = Router()
 
