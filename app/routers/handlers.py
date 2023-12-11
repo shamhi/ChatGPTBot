@@ -6,7 +6,6 @@ from aiogram.fsm.context import FSMContext
 from app.models import ChatGPT
 from app.keyboards import ikb
 
-
 main_router = Router()
 
 
@@ -37,7 +36,6 @@ async def response_query(query: InlineQuery, state: FSMContext):
 
     response = await gpt.get_inline_response()
     await state.update_data(inline_question=question, response=response)
-
 
 
 # @main_router.callback_query(F.data == 'gpt_query')
@@ -88,7 +86,8 @@ async def cmd_newchat(message: Message, state: FSMContext):
 
 @main_router.message(F.text)
 async def send_gpt_response(message: Message, state: FSMContext):
-    msg = await message.answer("Ваш запрос обрабатывается...\nЕсли произошла какая-то ошибка, введите /newchat")
+    msg = await message.answer("*Ваш запрос обрабатывается...*\nЕсли произошла какая-то ошибка, введите /newchat",
+                               parse_mode='markdownv2')
 
     state_data = await state.get_data()
     history = state_data.get('history') or []
@@ -123,4 +122,5 @@ async def send_gpt_response(message: Message, state: FSMContext):
     history.extend(messages)
     await state.update_data(history=history)
 
-    await msg.edit_text(text=gpt.reformat_response(generated_text), parse_mode='markdownv2', disable_web_page_preview=True)
+    await msg.edit_text(text=gpt.reformat_response(generated_text), parse_mode='markdownv2',
+                        disable_web_page_preview=True)
