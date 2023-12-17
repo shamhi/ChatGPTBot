@@ -138,7 +138,7 @@ async def send_gpt(message: Message, state: FSMContext, aiogram_logger: Filterin
                         disable_web_page_preview=True)
 
 
-@main_router.message(F.photo)
+# @main_router.message(F.photo)
 async def send_gpt_by_photo(message: Message, state: FSMContext):
     msg = await message.answer("Ваш запрос обрабатывается...\nЕсли произошла какая-то ошибка, введите /newchat")
 
