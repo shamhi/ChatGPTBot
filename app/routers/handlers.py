@@ -3,6 +3,8 @@ from aiogram.types import Message, CallbackQuery, InlineQuery, InlineQueryResult
 from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
 
+from structlog.typing import FilteringBoundLogger
+
 from app.models import ChatGPT
 from app.utils.text_recognition import read_text
 from app.keyboards import ikb
@@ -86,7 +88,7 @@ async def cmd_newchat(message: Message, state: FSMContext):
 
 
 @main_router.message(F.text)
-async def send_gpt(message: Message, state: FSMContext):
+async def send_gpt(message: Message, state: FSMContext, aiogram_logger: FilteringBoundLogger):
     msg = await message.answer("Ваш запрос обрабатывается...\nЕсли произошла какая-то ошибка, введите /newchat")
 
     state_data = await state.get_data()
@@ -97,7 +99,11 @@ async def send_gpt(message: Message, state: FSMContext):
     await message.bot.send_chat_action(chat_id=message.chat.id, action='typing')
 
     response: dict[dict] = await gpt.get_response()
+
     if not response:
+        log = aiogram_logger.bind(not_response=response)
+        log.debug('GPT Error')
+
         await message.delete()
         return await msg.delete()
 
@@ -105,6 +111,9 @@ async def send_gpt(message: Message, state: FSMContext):
     detail = response.get('detail')
 
     if detail or not openai:
+        log = aiogram_logger.bind(detail=detail, openai=openai)
+        log.debug('GPT Error')
+
         await message.delete()
         return await msg.delete()
 
@@ -113,6 +122,9 @@ async def send_gpt(message: Message, state: FSMContext):
     error = openai.get('error')
 
     if error:
+        log = aiogram_logger.bind(error=error)
+        log.debug('GPT Error')
+
         await message.delete()
         return await msg.delete()
 
