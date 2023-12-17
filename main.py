@@ -67,9 +67,9 @@ async def setup_aiogram(dp: Dispatcher, bot: Bot):
     logger.info("Configured aiogram")
 
 
-async def aiogram_on_startup(dispatcher: Dispatcher, bot: Bot):
-    await bot.delete_webhook(drop_pending_updates=True)
-    await setup_aiogram(dispatcher, bot)
+async def aiogram_on_startup(dispatcher: Dispatcher, bots: list[Bot]):
+    [await bot.delete_webhook(drop_pending_updates=True) for bot in bots]
+    await setup_aiogram(dispatcher, bots[0])
     dispatcher["aiogram_logger"].info("Started polling")
 
 
@@ -98,10 +98,12 @@ def setup_middlewares(dp: Dispatcher):
 def main():
     bot1 = Bot(token=config.TOKEN1)
     bot2 = Bot(token=config.TOKEN2)
+
     dp = Dispatcher()
 
     dp.startup.register(aiogram_on_startup)
     dp.shutdown.register(aiogram_on_shutdown)
+
     dp.run_polling(bot1, bot2)
 
 
