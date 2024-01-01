@@ -91,8 +91,9 @@ async def cmd_newchat(message: Message, state: FSMContext):
 async def send_gpt(message: Message, state: FSMContext, aiogram_logger: FilteringBoundLogger):
     msg = await message.answer("Ваш запрос обрабатывается...\nЕсли произошла какая-то ошибка, введите /newchat")
 
+
     state_data = await state.get_data()
-    history = state_data.get('history') or []
+    history = state_data.get('history', [])
 
     gpt = ChatGPT(current_message=message.text, user_history=history)
 
@@ -121,14 +122,16 @@ async def send_gpt(message: Message, state: FSMContext, aiogram_logger: Filterin
     messages = openai.get('message')
     error = openai.get('error')
 
+    print(len(history))
     if error:
         log = aiogram_logger.bind(error=error)
         log.debug('GPT Error')
 
+        history = history[:-2]
         await message.delete()
         return await msg.delete()
 
-    if len(history) >= 20:
+    if len(history) >= 16:
         history = history[2:]
 
     history.extend(messages)
@@ -169,10 +172,11 @@ async def send_gpt_by_photo(message: Message, state: FSMContext):
     error = openai.get('error')
 
     if error:
+        history = history[2:]
         await message.delete()
         return await msg.delete()
 
-    if len(history) >= 20:
+    if len(history) >= 18:
         history = history[2:]
 
     history.extend(messages)
