@@ -1,5 +1,6 @@
 from aiogram import Router, html, F
-from aiogram.types import Message, CallbackQuery, InlineQuery, InlineQueryResultArticle, InputTextMessageContent
+from aiogram.types import Message, CallbackQuery, InlineQuery, InlineQueryResultArticle, InputTextMessageContent, \
+    ReactionTypeEmoji
 from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
 
@@ -8,6 +9,7 @@ from structlog.typing import FilteringBoundLogger
 from app.models import ChatGPT
 from app.utils.text_recognition import read_text
 from app.keyboards import ikb
+from app.utils.scripts import get_random_reaction
 
 main_router = Router()
 
@@ -91,6 +93,7 @@ async def cmd_newchat(message: Message, state: FSMContext):
 async def send_gpt(message: Message, state: FSMContext, aiogram_logger: FilteringBoundLogger):
     msg = await message.answer("Ваш запрос обрабатывается...\nЕсли произошла какая-то ошибка, введите /newchat")
 
+    await message.react(reaction=[ReactionTypeEmoji(emoji=get_random_reaction())])
 
     state_data = await state.get_data()
     history = state_data.get('history', [])
@@ -122,7 +125,6 @@ async def send_gpt(message: Message, state: FSMContext, aiogram_logger: Filterin
     messages = openai.get('message')
     error = openai.get('error')
 
-    print(len(history))
     if error:
         log = aiogram_logger.bind(error=error)
         log.debug('GPT Error')
