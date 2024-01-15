@@ -134,7 +134,7 @@ async def send_gpt(message: Message, state: FSMContext, aiogram_logger: Filterin
 
         return await msg.edit_text('Введите ваш запрос еще раз')
 
-    if len(history) >= 16:
+    if len(history) >= 20:
         history = history[2:]
 
     history.extend(messages)
