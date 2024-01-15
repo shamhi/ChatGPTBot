@@ -129,7 +129,7 @@ async def send_gpt(message: Message, state: FSMContext, aiogram_logger: Filterin
         log = aiogram_logger.bind(error=error)
         log.debug('GPT Error')
 
-        history = history[-4:]
+        history = history[-8:]
         await state.update_data(history=history)
 
         return await msg.edit_text('Введите ваш запрос еще раз')
