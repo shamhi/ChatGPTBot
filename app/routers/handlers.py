@@ -129,10 +129,12 @@ async def send_gpt(message: Message, state: FSMContext, aiogram_logger: Filterin
         log = aiogram_logger.bind(error=error)
         log.debug('GPT Error')
 
-        history = history[-8:]
+        await msg.delete()
+
+        history = history[-4:]
         await state.update_data(history=history)
 
-        return await msg.edit_text('Введите ваш запрос еще раз')
+        return await send_gpt(message=message, state=state, aiogram_logger=aiogram_logger)
 
     if len(history) >= 20:
         history = history[2:]
