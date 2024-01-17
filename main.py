@@ -1,8 +1,9 @@
-from aiogram import Dispatcher, Bot
-from aiogram.types import BotCommand
 import structlog
 import tenacity
 import asyncpg
+
+from aiogram import Dispatcher, Bot
+from aiogram.types import BotCommand
 
 from app.middlewares import InfoLoggerMiddleware, ThrottlingMiddleware
 from app.routers import main_router
