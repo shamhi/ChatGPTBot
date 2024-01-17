@@ -1,8 +1,9 @@
 from typing import Callable, Awaitable, Any, cast
-from aiogram import BaseMiddleware
-from aiogram.types import Update, TelegramObject
 import structlog
 import time
+
+from aiogram import BaseMiddleware
+from aiogram.types import Update, TelegramObject
 
 
 
