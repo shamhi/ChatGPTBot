@@ -1,8 +1,9 @@
 from typing import Callable, Awaitable, Any, cast
+from dataclasses import dataclass, field
+
 from aiogram import BaseMiddleware
 from aiogram.types import Message, TelegramObject
 from cachetools import TTLCache
-from dataclasses import dataclass, field
 import structlog
 
 
