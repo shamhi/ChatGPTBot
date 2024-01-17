@@ -1,7 +1,9 @@
-from aiogram import md
-from app.config import EDEN_API
 import aiohttp
 import asyncio
+
+from aiogram import md
+
+from app.config import EDEN_API
 
 
 class ChatGPT:
