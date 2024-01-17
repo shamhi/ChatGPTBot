@@ -3,13 +3,13 @@ from aiogram.types import Message, CallbackQuery, InlineQuery, InlineQueryResult
     ReactionTypeEmoji
 from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
-
 from structlog.typing import FilteringBoundLogger
 
 from app.models import ChatGPT
-from app.utils.text_recognition import read_text
 from app.keyboards import ikb
 from app.utils.scripts import get_random_reaction
+
+
 
 main_router = Router()
 
