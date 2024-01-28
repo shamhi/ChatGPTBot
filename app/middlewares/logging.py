@@ -26,6 +26,7 @@ class InfoLoggerMiddleware(BaseMiddleware):
                 message_id=message.message_id,
                 chat_type=message.chat.type,
                 chat_id=message.chat.id,
+                chat_name=message.chat.username,
             )
             if message.from_user is not None:
                 logger = logger.bind(user_id=message.from_user.id, user_name=message.from_user.username)
@@ -52,6 +53,7 @@ class InfoLoggerMiddleware(BaseMiddleware):
                 callback_query_id=c.id,
                 callback_data=c.data,
                 user_id=c.from_user.id,
+                user_name=c.from_user.username,
                 inline_message_id=c.inline_message_id,
                 chat_instance=c.chat_instance,
             )
@@ -60,6 +62,7 @@ class InfoLoggerMiddleware(BaseMiddleware):
                     message_id=c.message.message_id,
                     chat_type=c.message.chat.type,
                     chat_id=c.message.chat.id,
+                    chat_name=c.message.chat.username,
                 )
             logger.debug("Received callback query")
         elif event.inline_query:
@@ -67,6 +70,7 @@ class InfoLoggerMiddleware(BaseMiddleware):
             logger = logger.bind(
                 query_id=query.id,
                 user_id=query.from_user.id,
+                user_name=query.from_user.username,
                 query=query.query,
                 offset=query.offset,
                 chat_type=query.chat_type,
@@ -77,7 +81,9 @@ class InfoLoggerMiddleware(BaseMiddleware):
             upd = event.my_chat_member
             logger = self.logger.bind(
                 user_id=upd.from_user.id,
+                user_name=upd.from_user.username,
                 chat_id=upd.chat.id,
+                chat_name=upd.chat.username,
                 old_state=upd.old_chat_member,
                 new_state=upd.new_chat_member,
             )
@@ -86,7 +92,9 @@ class InfoLoggerMiddleware(BaseMiddleware):
             upd = event.chat_member
             logger = logger.bind(
                 user_id=upd.from_user.id,
+                user_name=upd.from_user.username,
                 chat_id=upd.chat.id,
+                chat_name=upd.chat.username,
                 old_state=upd.old_chat_member,
                 new_state=upd.new_chat_member,
             )
